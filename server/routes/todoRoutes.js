@@ -4,9 +4,10 @@ const pool = require("../db");
 
 // Get all todos
 router.get("/", async (req, res) => {
-  console.log("in todos router");
   try {
-    const todos = await pool.query("SELECT todo_id, description FROM todo");
+    const todos = await pool.query(
+      "SELECT todo_id, description, completed FROM todo"
+    );
     res.json(todos.rows);
   } catch (error) {
     console.log(error.message);
