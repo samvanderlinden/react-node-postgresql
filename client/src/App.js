@@ -6,6 +6,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
+import Switch from "@mui/material/Switch";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -33,6 +34,7 @@ const columns = [
 function App() {
   const [todoInput, setTodoInput] = useState("");
   const [todos, setTodos] = useState([]);
+  const [todoCompleted, setTodoCompleted] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -49,20 +51,34 @@ function App() {
     setTodoInput(e.target.value);
   };
 
-  const onSubmitHandler = (e) => {
+  const onTodoIsCompletedChange = (todo) => {
+    console.log(todo);
+  };
+
+  const getTodosData = async () => {
+    const response = await axios.get("http://localhost:5000/todos");
+    const todosData = response.data;
+
+    setTodos(todosData);
+  };
+
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log({ todoInput });
+
+    try {
+      await axios.post("http://localhost:5000/todos", {
+        description: todoInput,
+      });
+
+      getTodosData();
+    } catch (error) {
+      console.log(error.response.data);
+    }
+
     setTodoInput("");
   };
 
   useEffect(() => {
-    const getTodosData = async () => {
-      const response = await axios.get("http://localhost:5000/todos");
-      const todosData = response.data;
-
-      setTodos(todosData);
-    };
-
     getTodosData();
   }, []);
 
@@ -71,7 +87,7 @@ function App() {
       <h1>My ToDo App</h1>
       <form onSubmit={onSubmitHandler}>
         <FormControl>
-          <InputLabel htmlFor="todo-input">ToDo Input</InputLabel>
+          <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
           <Input
             id="todo-input"
             value={todoInput}
@@ -104,16 +120,29 @@ function App() {
                 .map((todo) => {
                   return (
                     <TableRow
-                      hover
-                      role="checkbox"
+                      hover={true}
                       tabIndex={-1}
                       key={todo.todo_id}
+                      // onClick={(todo) => onTodoIsCompletedChange(todo)}
+                      className="TableRow"
                     >
                       {columns.map((column) => {
                         const value = todo[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format(value)}
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            //onClick={(todo) => onTodoIsCompletedChange(todo)}
+                          >
+                            {column.id === "description" ? (
+                              column.format(value)
+                            ) : (
+                              <Switch
+                                checked={todo.completed}
+                                inputProps={{ "aria-label": "controlled" }}
+                                onClick={() => onTodoIsCompletedChange(todo)}
+                              />
+                            )}
                           </TableCell>
                         );
                       })}
