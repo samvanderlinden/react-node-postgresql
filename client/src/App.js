@@ -33,9 +33,7 @@ const columns = [
 
 function App() {
   const [todoInput, setTodoInput] = useState("");
-  const [updatedTodo, setUpdatedTodo] = useState({});
   const [todos, setTodos] = useState([]);
-  const [todoCompleted, setTodoCompleted] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
