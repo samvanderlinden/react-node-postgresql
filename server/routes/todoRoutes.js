@@ -49,13 +49,14 @@ router.post("/", async (req, res) => {
 });
 
 //Edit a todo
-router.put("/:id", async (req, res) => {
+router.put("/completeTodo/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { description, isComplete } = req.body;
+    const toggleIsComplete = !isComplete;
     await pool.query(
       "UPDATE todo SET description = $1, completed = $2 WHERE todo_id = $3 RETURNING *",
-      [description, isComplete, id]
+      [description, toggleIsComplete, id]
     );
 
     try {

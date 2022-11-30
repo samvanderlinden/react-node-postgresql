@@ -33,8 +33,9 @@ const columns = [
 
 function App() {
   const [todoInput, setTodoInput] = useState("");
+  const [updatedTodo, setUpdatedTodo] = useState({});
   const [todos, setTodos] = useState([]);
-  const [todoCompleted, setTodoCompleted] = useState(false);
+  const [todoCompleted, setTodoCompleted] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -51,8 +52,19 @@ function App() {
     setTodoInput(e.target.value);
   };
 
-  const onTodoIsCompletedChange = (todo) => {
-    console.log(todo);
+  const onTodoIsCompletedChange = async (todo) => {
+    const { completed, todo_id, description } = todo;
+
+    try {
+      const updatedRows = await axios.put(
+        `http://localhost:5000/todos/completeTodo/${todo_id}`,
+        { description: description, isComplete: completed }
+      );
+
+      setTodos(updatedRows.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getTodosData = async () => {
@@ -119,21 +131,11 @@ function App() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((todo) => {
                   return (
-                    <TableRow
-                      hover={true}
-                      tabIndex={-1}
-                      key={todo.todo_id}
-                      // onClick={(todo) => onTodoIsCompletedChange(todo)}
-                      className="TableRow"
-                    >
+                    <TableRow hover={true} tabIndex={-1} key={todo.todo_id}>
                       {columns.map((column) => {
                         const value = todo[column.id];
                         return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            //onClick={(todo) => onTodoIsCompletedChange(todo)}
-                          >
+                          <TableCell key={column.id} align={column.align}>
                             {column.id === "description" ? (
                               column.format(value)
                             ) : (
