@@ -15,6 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { Grid } from "@mui/material";
 
 const columns = [
   {
@@ -100,7 +101,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1>My ToDo App</h1>
+      <header>
+        <h1>My ToDo App</h1>
+      </header>
       <form onSubmit={onSubmitHandler}>
         <FormControl>
           <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
@@ -114,8 +117,8 @@ function App() {
           Submit
         </Button>
       </form>
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      <Paper sx={{ width: "90%", overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: 400 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -141,7 +144,24 @@ function App() {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.id === "description" ? (
-                              column.format(value)
+                              <Grid
+                                container
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                              >
+                                <Grid item>{column.format(value)}</Grid>
+                                <Grid item>
+                                  <Button
+                                    variant="contained"
+                                    color="error"
+                                    startIcon={<DeleteIcon />}
+                                    onClick={() => onDeleteTodo(todo.todo_id)}
+                                  >
+                                    Delete
+                                  </Button>
+                                </Grid>
+                              </Grid>
                             ) : (
                               <Switch
                                 checked={todo.completed}
@@ -149,7 +169,7 @@ function App() {
                                 onClick={() => onTodoIsCompletedChange(todo)}
                               />
                             )}
-                            {column.id === "description" && (
+                            {/* {column.id === "description" && (
                               <Button
                                 variant="contained"
                                 color="error"
@@ -158,7 +178,7 @@ function App() {
                               >
                                 Delete
                               </Button>
-                            )}
+                            )} */}
                           </TableCell>
                         );
                       })}
