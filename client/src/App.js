@@ -105,22 +105,39 @@ function App() {
         <h1>My ToDo App</h1>
       </header>
       <form onSubmit={onSubmitHandler}>
-        <FormControl>
-          <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
-          <Input
-            id="todo-input"
-            value={todoInput}
-            onChange={onTodoInputChange}
-          />
-        </FormControl>
-        <Button variant="contained" color="primary" type="submit">
-          Submit
-        </Button>
+        <Grid
+          container
+          spacing={3}
+          direction="row"
+          justifyContent="center"
+          alignItems="flex-end"
+        >
+          <Grid item>
+            <FormControl>
+              <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
+              <Input
+                id="todo-input"
+                value={todoInput}
+                onChange={onTodoInputChange}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary" type="submit">
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </form>
-      <Paper sx={{ width: "90%", overflow: "hidden" }}>
+
+      <Paper elevation={3} sx={{ overflow: "hidden", m: 5 }}>
         <TableContainer sx={{ maxHeight: 400 }}>
           <Table stickyHeader aria-label="sticky table">
-            <TableHead>
+            <TableHead
+              sx={{
+                backgroundColor: "yellow",
+              }}
+            >
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
@@ -155,6 +172,7 @@ function App() {
                                   <Button
                                     variant="contained"
                                     color="error"
+                                    size="small"
                                     startIcon={<DeleteIcon />}
                                     onClick={() => onDeleteTodo(todo.todo_id)}
                                   >
@@ -169,16 +187,6 @@ function App() {
                                 onClick={() => onTodoIsCompletedChange(todo)}
                               />
                             )}
-                            {/* {column.id === "description" && (
-                              <Button
-                                variant="contained"
-                                color="error"
-                                startIcon={<DeleteIcon />}
-                                onClick={() => onDeleteTodo(todo.todo_id)}
-                              >
-                                Delete
-                              </Button>
-                            )} */}
                           </TableCell>
                         );
                       })}
