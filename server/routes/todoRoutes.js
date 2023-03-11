@@ -78,12 +78,12 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const todo = await pool.query(
+    const todos = await pool.query(
       "DELETE FROM todo WHERE todo_id = $1 RETURNING *",
       [id]
     );
 
-    res.json({ message: `Todo "${todo.rows[0].description}" deleted` });
+    res.json(todos.rows);
   } catch (error) {
     console.log(error.message);
   }

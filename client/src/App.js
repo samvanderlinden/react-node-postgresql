@@ -5,6 +5,7 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import Switch from "@mui/material/Switch";
 import Table from "@mui/material/Table";
@@ -63,6 +64,11 @@ function App() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onDeleteTodo = async (todo) => {
+    await axios.delete(`http://localhost:5000/todos/${todo}`);
+    getTodosData();
   };
 
   const getTodosData = async () => {
@@ -142,6 +148,16 @@ function App() {
                                 inputProps={{ "aria-label": "controlled" }}
                                 onClick={() => onTodoIsCompletedChange(todo)}
                               />
+                            )}
+                            {column.id === "description" && (
+                              <Button
+                                variant="contained"
+                                color="error"
+                                startIcon={<DeleteIcon />}
+                                onClick={() => onDeleteTodo(todo.todo_id)}
+                              >
+                                Delete
+                              </Button>
                             )}
                           </TableCell>
                         );
