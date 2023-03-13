@@ -130,8 +130,8 @@ function App() {
         </Grid>
       </form>
 
-      <Paper elevation={3} sx={{ overflow: "hidden", m: 5 }}>
-        <TableContainer sx={{ maxHeight: 400 }}>
+      <Paper elevation={3} sx={{ m: 5 }}>
+        <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead
               sx={{
