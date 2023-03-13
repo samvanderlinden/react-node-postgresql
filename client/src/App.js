@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
@@ -16,6 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Grid } from "@mui/material";
+import TodoForm from "./components/TodoForm";
 
 const columns = [
   {
@@ -34,7 +32,6 @@ const columns = [
 ];
 
 function App() {
-  const [todoInput, setTodoInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -46,10 +43,6 @@ function App() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const onTodoInputChange = (e) => {
-    setTodoInput(e.target.value);
   };
 
   const onTodoIsCompletedChange = async (todo) => {
@@ -79,22 +72,6 @@ function App() {
     setTodos(todosData);
   };
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      await axios.post("http://localhost:5000/todos", {
-        description: todoInput,
-      });
-
-      getTodosData();
-    } catch (error) {
-      console.log(error.response.data);
-    }
-
-    setTodoInput("");
-  };
-
   useEffect(() => {
     getTodosData();
   }, []);
@@ -104,32 +81,7 @@ function App() {
       <header>
         <h1>My ToDo App</h1>
       </header>
-      <form onSubmit={onSubmitHandler}>
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="center"
-          alignItems="flex-end"
-        >
-          <Grid item>
-            <FormControl>
-              <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
-              <Input
-                id="todo-input"
-                value={todoInput}
-                onChange={onTodoInputChange}
-              />
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" type="submit">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-
+      <TodoForm getTodosData={getTodosData} />
       <Paper elevation={3} sx={{ m: 5 }}>
         <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader aria-label="sticky table">
