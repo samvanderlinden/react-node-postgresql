@@ -6,7 +6,7 @@ const pool = require("../db");
 router.get("/", async (req, res) => {
   try {
     const todos = await pool.query(
-      "SELECT todo_id, description, completed FROM todo"
+      "SELECT todo_id, description, completed FROM todo ORDER BY todo_id ASC"
     );
     res.json(todos.rows);
   } catch (error) {
@@ -37,12 +37,15 @@ router.post("/", async (req, res) => {
       throw new Error("User input cannot be empty.");
     }
 
-    const newTodo = await pool.query(
-      "INSERT INTO todo (description) VALUES($1) RETURNING *",
-      [description]
+    await pool.query("INSERT INTO todo (description) VALUES($1) RETURNING *", [
+      description,
+    ]);
+
+    const todos = await pool.query(
+      "SELECT todo_id, description, completed FROM todo ORDER BY todo_id ASC"
     );
 
-    res.json(newTodo.rows[0]);
+    res.json(todos.rows);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -78,12 +81,16 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const todos = await pool.query(
-      "DELETE FROM todo WHERE todo_id = $1 RETURNING *",
-      [id]
-    );
+    await pool.query("DELETE FROM todo WHERE todo_id = $1 RETURNING *", [id]);
 
-    res.json(todos.rows);
+    try {
+      const todos = await pool.query(
+        "SELECT todo_id, description, completed FROM todo ORDER BY todo_id ASC"
+      );
+      res.json(todos.rows);
+    } catch (error) {
+      console.log(error.message);
+    }
   } catch (error) {
     console.log(error.message);
   }
