@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, FormControl, Input, InputLabel, Button } from "@mui/material";
 import axios from "axios";
 
-const TodoForm = ({ getTodosData }) => {
+const TodoForm = ({ getTodosData, setTodos }) => {
   const [todoInput, setTodoInput] = useState("");
 
   const onTodoInputChange = (e) => {
@@ -13,11 +13,15 @@ const TodoForm = ({ getTodosData }) => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/todos", {
+      const toDos = await axios.post("http://localhost:5000/todos", {
         description: todoInput,
       });
 
-      getTodosData();
+      console.log(toDos);
+
+      setTodos(toDos.data);
+
+      // getTodosData();
     } catch (error) {
       console.log(error.response.data);
     }
