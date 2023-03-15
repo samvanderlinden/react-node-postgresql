@@ -9,11 +9,13 @@ import {
   TableBody,
   TableCell,
   Grid,
+  IconButton,
   Switch,
-  Button,
   TablePagination,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import EditDialog from "./EditDialog";
 
 const columns = [
   {
@@ -34,6 +36,8 @@ const columns = [
 const TodoTable = ({ todos, setTodos }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [open, setOpen] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -42,6 +46,15 @@ const TodoTable = ({ todos, setTodos }) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleClickOpen = (todo) => {
+    setOpen(true);
+    setSelectedTodo(todo);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const onTodoIsCompletedChange = async (todo) => {
@@ -105,15 +118,17 @@ const TodoTable = ({ todos, setTodos }) => {
                               >
                                 <Grid item>{column.format(value)}</Grid>
                                 <Grid item>
-                                  <Button
-                                    variant="contained"
+                                  <IconButton
+                                    onClick={() => handleClickOpen(todo)}
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                  <IconButton
                                     color="error"
-                                    size="small"
-                                    startIcon={<DeleteIcon />}
                                     onClick={() => onDeleteTodo(todo.todo_id)}
                                   >
-                                    Delete
-                                  </Button>
+                                    <DeleteIcon />
+                                  </IconButton>
                                 </Grid>
                               </Grid>
                             ) : (
@@ -141,6 +156,15 @@ const TodoTable = ({ todos, setTodos }) => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+        {open && (
+          <EditDialog
+            handleClose={handleClose}
+            open={open}
+            setOpen={setOpen}
+            setTodos={setTodos}
+            todo={selectedTodo}
+          />
+        )}
       </Paper>
     </>
   );

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Grid, FormControl, Input, InputLabel, Button } from "@mui/material";
 import axios from "axios";
+import TodoInput from "./TodoInput";
 
-const TodoForm = ({ getTodosData, setTodos }) => {
+const TodoForm = ({ setTodos }) => {
   const [todoInput, setTodoInput] = useState("");
 
   const onTodoInputChange = (e) => {
@@ -17,11 +17,7 @@ const TodoForm = ({ getTodosData, setTodos }) => {
         description: todoInput,
       });
 
-      console.log(toDos);
-
       setTodos(toDos.data);
-
-      // getTodosData();
     } catch (error) {
       console.log(error.response.data);
     }
@@ -31,7 +27,7 @@ const TodoForm = ({ getTodosData, setTodos }) => {
 
   return (
     <div>
-      <form onSubmit={onSubmitHandler}>
+      {/* <form onSubmit={onSubmitHandler}>
         <Grid
           container
           spacing={3}
@@ -55,7 +51,12 @@ const TodoForm = ({ getTodosData, setTodos }) => {
             </Button>
           </Grid>
         </Grid>
-      </form>
+      </form> */}
+      <TodoInput
+        onSubmitHandler={onSubmitHandler}
+        todoInput={todoInput}
+        onTodoInputChange={onTodoInputChange}
+      />
     </div>
   );
 };
