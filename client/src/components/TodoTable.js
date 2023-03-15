@@ -51,7 +51,6 @@ const TodoTable = ({ todos, setTodos }) => {
   const handleClickOpen = (todo) => {
     setOpen(true);
     setSelectedTodo(todo);
-    console.log(todo);
   };
 
   const handleClose = () => {
@@ -161,6 +160,8 @@ const TodoTable = ({ todos, setTodos }) => {
           <EditDialog
             handleClose={handleClose}
             open={open}
+            setOpen={setOpen}
+            setTodos={setTodos}
             todo={selectedTodo}
           />
         )}

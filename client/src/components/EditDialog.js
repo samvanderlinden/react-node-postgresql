@@ -3,9 +3,8 @@ import { Dialog, DialogTitle } from "@mui/material";
 import TodoInput from "./TodoInput";
 import axios from "axios";
 
-const EditDialog = ({ handleClose, open, todo }) => {
+const EditDialog = ({ handleClose, open, setOpen, todo, setTodos }) => {
   const [todoInput, setTodoInput] = useState(todo.description);
-  const [toDos, setTodos] = useState([]);
 
   const onTodoInputChange = (e) => {
     setTodoInput(e.target.value);
@@ -25,6 +24,7 @@ const EditDialog = ({ handleClose, open, todo }) => {
       );
 
       setTodos(toDos.data);
+      setOpen(false);
     } catch (error) {
       console.log(error.response.data);
     }
