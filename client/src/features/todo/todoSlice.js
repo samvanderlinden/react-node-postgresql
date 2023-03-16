@@ -3,33 +3,40 @@ import axios from "axios";
 
 export const fetchAllTodos = createAsyncThunk(
   "todos/fetchAllTodos",
-  async () => {
+  async (thunkAPI) => {
     const response = await axios.get("http://localhost:5000/todos");
+    console.log({ response });
     return response.data;
   }
 );
 
-const initialState = [];
+const initialState = {
+  loading: false,
+  todos: [],
+};
 
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {
-    add: (state) => {
-      state.value += 1;
-
-      console.log({ state });
+  reducers: {},
+  // extraReducers: (builder) => {
+  //   builder.addCase(fetchAllTodos.fulfilled, (state, action) => {
+  //     state = action.payload;
+  //     console.log(state);
+  //   });
+  // },
+  extraReducers: {
+    [fetchAllTodos.pending]: (state) => {
+      state.loading = true;
     },
-    extraReducers: (builder) => {
-      builder.addCase(fetchAllTodos.fulfilled, (state, action) => {
-        console.log({ state });
-        console.log({ action });
-        // state.entities.push(action.payload);
-      });
+    [fetchAllTodos.fulfilled]: (state, { payload }) => {
+      state.todos = payload;
+      console.log(payload);
+    },
+    [fetchAllTodos.rejected]: (state) => {
+      state.loading = false;
     },
   },
 });
 
-export const { add } = todoSlice.actions;
-
-export default todoSlice.reducer;
+export const todosReducer = todoSlice.reducer;
