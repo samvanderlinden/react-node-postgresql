@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAllTodos } from "./features/todo/todoSlice";
 import TodoForm from "./components/TodoForm";
 import TodoTable from "./components/TodoTable";
 
 function App() {
+  const todo = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
   const [todos, setTodos] = useState([]);
 
   const getTodosData = async () => {
@@ -15,8 +19,20 @@ function App() {
   };
 
   useEffect(() => {
-    getTodosData();
-  }, []);
+    // getTodosData();
+
+    const fetchTodos = async () => {
+      try {
+        const data = await dispatch(fetchAllTodos());
+        console.log({ data });
+        setTodos(data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTodos();
+  }, [dispatch]);
 
   return (
     <div className="App">
