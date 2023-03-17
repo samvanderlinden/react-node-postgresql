@@ -8,7 +8,6 @@ import TodoTable from "./components/TodoTable";
 
 function App() {
   const todo = useSelector((state) => state.todo);
-  console.log({ todo });
   const dispatch = useDispatch();
   const [todos, setTodos] = useState([]);
 
@@ -24,14 +23,12 @@ function App() {
       try {
         const data = await dispatch(fetchAllTodos());
         console.log({ data });
-        // setTodos(data.payload);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchTodos();
-    // dispatch(fetchAllTodos());
   }, [dispatch]);
 
   return (
