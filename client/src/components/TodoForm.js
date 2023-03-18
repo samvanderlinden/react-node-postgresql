@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { createTodo } from "../features/todo/todoSlice";
 import TodoInput from "./TodoInput";
 
 const TodoForm = ({ setTodos }) => {
   const [todoInput, setTodoInput] = useState("");
+  const dispatch = useDispatch();
 
   const onTodoInputChange = (e) => {
     setTodoInput(e.target.value);
@@ -13,11 +15,13 @@ const TodoForm = ({ setTodos }) => {
     e.preventDefault();
 
     try {
-      const toDos = await axios.post("http://localhost:5000/todos", {
-        description: todoInput,
-      });
+      // const toDos = await axios.post("http://localhost:5000/todos", {
+      //   description: todoInput,
+      // });
 
-      setTodos(toDos.data);
+      dispatch(createTodo(todoInput));
+
+      // setTodos(toDos.data);
     } catch (error) {
       console.log(error.response.data);
     }
@@ -27,31 +31,6 @@ const TodoForm = ({ setTodos }) => {
 
   return (
     <div>
-      {/* <form onSubmit={onSubmitHandler}>
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="center"
-          alignItems="flex-end"
-        >
-          <Grid item>
-            <FormControl>
-              <InputLabel htmlFor="todo-input">Add ToDo Item Here</InputLabel>
-              <Input
-                id="todo-input"
-                value={todoInput}
-                onChange={onTodoInputChange}
-              />
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" type="submit">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form> */}
       <TodoInput
         onSubmitHandler={onSubmitHandler}
         todoInput={todoInput}

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { deleteTodo } from "../features/todo/todoSlice";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Paper,
   TableContainer,
@@ -33,11 +35,14 @@ const columns = [
   },
 ];
 
-const TodoTable = ({ todos, setTodos }) => {
+const TodoTable = ({ setTodos }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
+  const { todos } = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
+  console.log({ todos });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -73,99 +78,104 @@ const TodoTable = ({ todos, setTodos }) => {
   };
 
   const onDeleteTodo = async (todo) => {
-    const todos = await axios.delete(`http://localhost:5000/todos/${todo}`);
-    setTodos(todos.data);
+    // const todos = await axios.delete(`http://localhost:5000/todos/${todo}`);
+    dispatch(deleteTodo(todo));
+    // setTodos(todos.data);
   };
 
   return (
     <>
-      <Paper elevation={3} sx={{ m: 5 }}>
-        <TableContainer sx={{ maxHeight: 500 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead
-              sx={{
-                backgroundColor: "yellow",
-              }}
-            >
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {todos
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((todo) => {
-                  return (
-                    <TableRow hover={true} tabIndex={-1} key={todo.todo_id}>
-                      {columns.map((column) => {
-                        const value = todo[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.id === "description" ? (
-                              <Grid
-                                container
-                                direction="row"
-                                justifyContent="space-between"
-                                alignItems="center"
-                              >
-                                <Grid item>{column.format(value)}</Grid>
-                                <Grid item>
-                                  <IconButton
-                                    onClick={() => handleClickOpen(todo)}
-                                  >
-                                    <EditIcon />
-                                  </IconButton>
-                                  <IconButton
-                                    color="error"
-                                    onClick={() => onDeleteTodo(todo.todo_id)}
-                                  >
-                                    <DeleteIcon />
-                                  </IconButton>
+      {todos.length === 0 ? (
+        <p>Loading...</p>
+      ) : (
+        <Paper elevation={3} sx={{ m: 5 }}>
+          <TableContainer sx={{ maxHeight: 500 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead
+                sx={{
+                  backgroundColor: "yellow",
+                }}
+              >
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {todos
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((todo) => {
+                    return (
+                      <TableRow hover={true} tabIndex={-1} key={todo.todo_id}>
+                        {columns.map((column) => {
+                          const value = todo[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "description" ? (
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                >
+                                  <Grid item>{column.format(value)}</Grid>
+                                  <Grid item>
+                                    <IconButton
+                                      onClick={() => handleClickOpen(todo)}
+                                    >
+                                      <EditIcon />
+                                    </IconButton>
+                                    <IconButton
+                                      color="error"
+                                      onClick={() => onDeleteTodo(todo.todo_id)}
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Grid>
                                 </Grid>
-                              </Grid>
-                            ) : (
-                              <Switch
-                                checked={todo.completed}
-                                inputProps={{ "aria-label": "controlled" }}
-                                onClick={() => onTodoIsCompletedChange(todo)}
-                              />
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={todos.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-        {open && (
-          <EditDialog
-            handleClose={handleClose}
-            open={open}
-            setOpen={setOpen}
-            setTodos={setTodos}
-            todo={selectedTodo}
+                              ) : (
+                                <Switch
+                                  checked={todo.completed}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                  onClick={() => onTodoIsCompletedChange(todo)}
+                                />
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={todos.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        )}
-      </Paper>
+          {open && (
+            <EditDialog
+              handleClose={handleClose}
+              open={open}
+              setOpen={setOpen}
+              setTodos={setTodos}
+              todo={selectedTodo}
+            />
+          )}
+        </Paper>
+      )}
     </>
   );
 };
