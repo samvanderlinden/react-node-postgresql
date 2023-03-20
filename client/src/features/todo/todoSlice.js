@@ -30,6 +30,21 @@ export const deleteTodo = createAsyncThunk(
   }
 );
 
+export const updateTodoCompletedStatus = createAsyncThunk(
+  "todos/updateCompletedStatus",
+  async (todo) => {
+    const { completed, todo_id, description } = todo;
+    const response = await axios.put(
+      `http://localhost:5000/todos/completeTodo/${todo_id}`,
+      {
+        description: description,
+        isComplete: completed,
+      }
+    );
+    return response.data;
+  }
+);
+
 const initialState = {
   loading: false,
   todos: [],
@@ -68,6 +83,16 @@ export const todoSlice = createSlice({
       state.todos = payload;
     },
     [deleteTodo.rejected]: (state) => {
+      state.loading = false;
+    },
+    [updateTodoCompletedStatus.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateTodoCompletedStatus.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.todos = payload;
+    },
+    [updateTodoCompletedStatus.rejected]: (state) => {
       state.loading = false;
     },
   },

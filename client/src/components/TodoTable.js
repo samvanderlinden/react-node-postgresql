@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { deleteTodo } from "../features/todo/todoSlice";
+import {
+  deleteTodo,
+  updateTodoCompletedStatus,
+} from "../features/todo/todoSlice";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Paper,
@@ -63,24 +65,11 @@ const TodoTable = ({ setTodos }) => {
   };
 
   const onTodoIsCompletedChange = async (todo) => {
-    const { completed, todo_id, description } = todo;
-
-    try {
-      const updatedRows = await axios.put(
-        `http://localhost:5000/todos/completeTodo/${todo_id}`,
-        { description: description, isComplete: completed }
-      );
-
-      setTodos(updatedRows.data);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(updateTodoCompletedStatus(todo));
   };
 
   const onDeleteTodo = async (todo) => {
-    // const todos = await axios.delete(`http://localhost:5000/todos/${todo}`);
     dispatch(deleteTodo(todo));
-    // setTodos(todos.data);
   };
 
   return (
