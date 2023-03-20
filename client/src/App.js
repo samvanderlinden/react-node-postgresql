@@ -11,6 +11,7 @@ function App() {
   const dispatch = useDispatch();
   const [todos, setTodos] = useState([]);
 
+  // Get todos
   const getTodosData = async () => {
     const response = await axios.get("http://localhost:5000/todos");
     const todosData = response.data;
