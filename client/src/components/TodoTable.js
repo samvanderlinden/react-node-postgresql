@@ -44,7 +44,6 @@ const TodoTable = ({ setTodos }) => {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const { todos } = useSelector((state) => state.todo);
   const dispatch = useDispatch();
-  console.log({ todos });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

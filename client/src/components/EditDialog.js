@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Dialog, DialogTitle } from "@mui/material";
 import TodoInput from "./TodoInput";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { updateTodoDescription } from "../features/todo/todoSlice";
 
 const EditDialog = ({ handleClose, open, setOpen, todo, setTodos }) => {
   const [todoInput, setTodoInput] = useState(todo.description);
+  const dispatch = useDispatch();
 
   const onTodoInputChange = (e) => {
     setTodoInput(e.target.value);
@@ -13,22 +15,9 @@ const EditDialog = ({ handleClose, open, setOpen, todo, setTodos }) => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      console.log(todo.todo_id);
-      const toDos = await axios.put(
-        `http://localhost:5000/todos/${todo.todo_id}`,
-        {
-          description: todoInput,
-          isComplete: todo.completed,
-        }
-      );
+    dispatch(updateTodoDescription({ todo, todoInput }));
 
-      setTodos(toDos.data);
-      setOpen(false);
-    } catch (error) {
-      console.log(error.response.data);
-    }
-
+    setOpen(false);
     setTodoInput("");
   };
 
