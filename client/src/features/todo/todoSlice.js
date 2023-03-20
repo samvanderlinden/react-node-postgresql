@@ -15,7 +15,6 @@ export const createTodo = createAsyncThunk(
     const response = await axios.post("http://localhost:5000/todos", {
       description: todoDescription,
     });
-    console.log({ response });
     return response.data;
   }
 );
@@ -25,6 +24,36 @@ export const deleteTodo = createAsyncThunk(
   async (todoId) => {
     const response = await axios.delete(
       `http://localhost:5000/todos/${todoId}`
+    );
+    return response.data;
+  }
+);
+
+export const updateTodoCompletedStatus = createAsyncThunk(
+  "todos/updateCompletedStatus",
+  async (todo) => {
+    const { completed, todo_id, description } = todo;
+    const response = await axios.put(
+      `http://localhost:5000/todos/completeTodo/${todo_id}`,
+      {
+        description: description,
+        isComplete: completed,
+      }
+    );
+    return response.data;
+  }
+);
+
+export const updateTodoDescription = createAsyncThunk(
+  "todos/updateTodoDescription",
+  async ({ todo, todoInput }) => {
+    console.log({ todo });
+    const response = await axios.put(
+      `http://localhost:5000/todos/${todo.todo_id}`,
+      {
+        description: todoInput,
+        isComplete: todo.completed,
+      }
     );
     return response.data;
   }
@@ -68,6 +97,26 @@ export const todoSlice = createSlice({
       state.todos = payload;
     },
     [deleteTodo.rejected]: (state) => {
+      state.loading = false;
+    },
+    [updateTodoCompletedStatus.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateTodoCompletedStatus.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.todos = payload;
+    },
+    [updateTodoCompletedStatus.rejected]: (state) => {
+      state.loading = false;
+    },
+    [updateTodoDescription.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateTodoDescription.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.todos = payload;
+    },
+    [updateTodoDescription.rejected]: (state) => {
       state.loading = false;
     },
   },

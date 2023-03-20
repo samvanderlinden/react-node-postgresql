@@ -11,6 +11,7 @@ function App() {
   const dispatch = useDispatch();
   const [todos, setTodos] = useState([]);
 
+  // Get todos
   const getTodosData = async () => {
     const response = await axios.get("http://localhost:5000/todos");
     const todosData = response.data;
@@ -21,8 +22,7 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const data = await dispatch(fetchAllTodos());
-        console.log({ data });
+        await dispatch(fetchAllTodos());
       } catch (error) {
         console.log(error);
       }
