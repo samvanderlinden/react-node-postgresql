@@ -4,7 +4,7 @@ import TodoInput from "./TodoInput";
 import { useDispatch } from "react-redux";
 import { updateTodoDescription } from "../features/todo/todoSlice";
 
-const EditDialog = ({ handleClose, open, setOpen, todo, setTodos }) => {
+const EditDialog = ({ handleClose, open, setOpen, todo }) => {
   const [todoInput, setTodoInput] = useState(todo.description);
   const dispatch = useDispatch();
 

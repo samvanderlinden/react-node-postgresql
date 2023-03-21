@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllTodos } from "./features/todo/todoSlice";
@@ -9,15 +8,6 @@ import TodoTable from "./components/TodoTable";
 function App() {
   const todo = useSelector((state) => state.todo);
   const dispatch = useDispatch();
-  const [todos, setTodos] = useState([]);
-
-  // Get todos
-  const getTodosData = async () => {
-    const response = await axios.get("http://localhost:5000/todos");
-    const todosData = response.data;
-
-    setTodos(todosData);
-  };
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -36,8 +26,8 @@ function App() {
       <header>
         <h1>My ToDo App</h1>
       </header>
-      <TodoForm getTodosData={getTodosData} setTodos={setTodos} />
-      <TodoTable todos={todo.todos} setTodos={setTodos} />
+      <TodoForm />
+      <TodoTable todos={todo.todos} />
     </div>
   );
 }

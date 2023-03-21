@@ -78,7 +78,6 @@ router.put("/completeTodo/:id", async (req, res) => {
 
 //Edit todo description
 router.put("/:id", async (req, res) => {
-  console.log(req);
   try {
     const { id } = req.params;
     const { description, isComplete } = req.body;

@@ -158,7 +158,6 @@ const TodoTable = ({ setTodos }) => {
               handleClose={handleClose}
               open={open}
               setOpen={setOpen}
-              setTodos={setTodos}
               todo={selectedTodo}
             />
           )}
