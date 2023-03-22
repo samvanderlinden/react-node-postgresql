@@ -47,7 +47,6 @@ export const updateTodoCompletedStatus = createAsyncThunk(
 export const updateTodoDescription = createAsyncThunk(
   "todos/updateTodoDescription",
   async ({ todo, todoInput }) => {
-    console.log({ todo });
     const response = await axios.put(
       `http://localhost:5000/todos/${todo.todo_id}`,
       {
@@ -114,7 +113,11 @@ export const todoSlice = createSlice({
     },
     [updateTodoDescription.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+      for (let index = 0; index < state.todos.length; index++) {
+        if (state.todos[index].todo_id === payload.todo_id) {
+          state.todos[index] = payload;
+        }
+      }
     },
     [updateTodoDescription.rejected]: (state) => {
       state.loading = false;
