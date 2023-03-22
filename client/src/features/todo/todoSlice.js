@@ -83,7 +83,7 @@ export const todoSlice = createSlice({
       state.loading = true;
     },
     [createTodo.fulfilled]: (state, { payload }) => {
-      state.todos = payload;
+      state.todos.push(payload);
       state.loading = false;
     },
     [createTodo.rejected]: (state) => {

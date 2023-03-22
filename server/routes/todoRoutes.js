@@ -37,15 +37,12 @@ router.post("/", async (req, res) => {
       throw new Error("User input cannot be empty.");
     }
 
-    await pool.query("INSERT INTO todo (description) VALUES($1) RETURNING *", [
-      description,
-    ]);
-
-    const todos = await pool.query(
-      "SELECT todo_id, description, completed FROM todo ORDER BY todo_id ASC"
+    const todo = await pool.query(
+      "INSERT INTO todo (description) VALUES($1) RETURNING *",
+      [description]
     );
 
-    res.json(todos.rows);
+    res.json(todo.rows[0]);
   } catch (error) {
     res.status(400).send(error.message);
   }
