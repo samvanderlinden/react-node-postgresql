@@ -47,7 +47,6 @@ export const updateTodoCompletedStatus = createAsyncThunk(
 export const updateTodoDescription = createAsyncThunk(
   "todos/updateTodoDescription",
   async ({ todo, todoInput }) => {
-    console.log({ todo });
     const response = await axios.put(
       `http://localhost:5000/todos/${todo.todo_id}`,
       {
@@ -83,7 +82,7 @@ export const todoSlice = createSlice({
       state.loading = true;
     },
     [createTodo.fulfilled]: (state, { payload }) => {
-      state.todos = payload;
+      state.todos.push(payload);
       state.loading = false;
     },
     [createTodo.rejected]: (state) => {
@@ -94,7 +93,16 @@ export const todoSlice = createSlice({
     },
     [deleteTodo.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+
+      // First, find index of element that contains the same todo_id from payload todo_id
+      const index = state.todos.findIndex(
+        (todo) => todo.todo_id === payload.todo_id
+      );
+
+      // If item exists in array, then remove using mutable splice method
+      if (index > -1) {
+        state.todos.splice(index, 1);
+      }
     },
     [deleteTodo.rejected]: (state) => {
       state.loading = false;
@@ -104,7 +112,11 @@ export const todoSlice = createSlice({
     },
     [updateTodoCompletedStatus.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+      for (let index = 0; index < state.todos.length; index++) {
+        if (state.todos[index].todo_id === payload.todo_id) {
+          state.todos[index] = payload;
+        }
+      }
     },
     [updateTodoCompletedStatus.rejected]: (state) => {
       state.loading = false;
@@ -114,7 +126,11 @@ export const todoSlice = createSlice({
     },
     [updateTodoDescription.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+      for (let index = 0; index < state.todos.length; index++) {
+        if (state.todos[index].todo_id === payload.todo_id) {
+          state.todos[index] = payload;
+        }
+      }
     },
     [updateTodoDescription.rejected]: (state) => {
       state.loading = false;
