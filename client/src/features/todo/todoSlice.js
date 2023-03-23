@@ -93,7 +93,16 @@ export const todoSlice = createSlice({
     },
     [deleteTodo.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+
+      // First, find index of element that contains the same todo_id from payload todo_id
+      const index = state.todos.findIndex(
+        (todo) => todo.todo_id === payload.todo_id
+      );
+
+      // If item exists in array, then remove using mutable splice method
+      if (index > -1) {
+        state.todos.splice(index, 1);
+      }
     },
     [deleteTodo.rejected]: (state) => {
       state.loading = false;
@@ -103,7 +112,11 @@ export const todoSlice = createSlice({
     },
     [updateTodoCompletedStatus.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.todos = payload;
+      for (let index = 0; index < state.todos.length; index++) {
+        if (state.todos[index].todo_id === payload.todo_id) {
+          state.todos[index] = payload;
+        }
+      }
     },
     [updateTodoCompletedStatus.rejected]: (state) => {
       state.loading = false;
