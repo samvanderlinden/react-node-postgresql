@@ -3,17 +3,15 @@ import { render } from "@testing-library/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 // As a basic setup, import your same slice reducers
-import { todosReducer } from "../features/todo/todoSlice";
+// import { todosReducer } from "../features/todo/todoSlice";
+import { setupStore } from "../store";
 
 export function renderWithProviders(
   ui,
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = configureStore({
-      reducer: { todo: todosReducer },
-      preloadedState,
-    }),
+    store = setupStore(preloadedState),
     ...renderOptions
   } = {}
 ) {

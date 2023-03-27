@@ -1,8 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { todosReducer } from "./features/todo/todoSlice";
 
-export const store = configureStore({
-  reducer: {
-    todo: todosReducer,
-  },
+const rootReducer = combineReducers({
+  todo: todosReducer,
 });
+
+export const setupStore = (preloadedState) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+  });
+};
