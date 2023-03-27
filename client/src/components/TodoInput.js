@@ -19,7 +19,7 @@ const TodoInput = ({ onSubmitHandler, todoInput, onTodoInputChange }) => {
               id="todo-input"
               value={todoInput}
               onChange={onTodoInputChange}
-              data-testid="todo-input"
+              inputProps={{ "data-testid": "todo-input" }}
             />
           </FormControl>
         </Grid>
