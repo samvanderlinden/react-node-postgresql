@@ -6,20 +6,19 @@ import TodoForm from "./components/TodoForm";
 import TodoTable from "./components/TodoTable";
 
 function App() {
-  const todo = useSelector((state) => state.todo);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        await dispatch(fetchAllTodos());
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTodos = async () => {
+  //     try {
+  //       await dispatch(fetchAllTodos());
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchTodos();
-  }, [dispatch]);
+  //   fetchTodos();
+  // }, [dispatch]);
 
   return (
     <div className="App">
@@ -27,7 +26,7 @@ function App() {
         <h1>My ToDo App</h1>
       </header>
       <TodoForm />
-      <TodoTable todos={todo.todos} />
+      <TodoTable />
     </div>
   );
 }

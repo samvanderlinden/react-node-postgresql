@@ -1,6 +1,5 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 // As a basic setup, import your same slice reducers
 // import { todosReducer } from "../features/todo/todoSlice";

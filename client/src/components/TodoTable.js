@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   deleteTodo,
   updateTodoCompletedStatus,
+  fetchAllTodos,
 } from "../features/todo/todoSlice";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -37,7 +38,7 @@ const columns = [
   },
 ];
 
-const TodoTable = ({ setTodos }) => {
+const TodoTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
@@ -71,6 +72,18 @@ const TodoTable = ({ setTodos }) => {
     dispatch(deleteTodo(todo));
   };
 
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        await dispatch(fetchAllTodos());
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTodos();
+  }, [dispatch]);
+
   return (
     <>
       {todos.length === 0 ? (
@@ -101,7 +114,12 @@ const TodoTable = ({ setTodos }) => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((todo) => {
                     return (
-                      <TableRow hover={true} tabIndex={-1} key={todo.todo_id}>
+                      <TableRow
+                        hover={true}
+                        tabIndex={-1}
+                        key={todo.todo_id}
+                        data-testid="table-row"
+                      >
                         {columns.map((column) => {
                           const value = todo[column.id];
                           return (
