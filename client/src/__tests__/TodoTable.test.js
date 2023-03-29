@@ -7,7 +7,7 @@ import { renderWithProviders } from "../utils/test-utils";
 import TodoTable from "../components/TodoTable";
 
 // We use msw to intercept the network request during the test,
-// and return the response 'Clean room' after 150ms
+// and return the response 'Clean room' after 100ms
 // when receiving a get request to the `/todos` endpoint
 export const handlers = [
   rest.get("http://localhost:5000/todos", (req, res, ctx) => {
@@ -35,5 +35,6 @@ describe("TodoTable component", () => {
     await waitForElementToBeRemoved(screen.queryByText(/Loading.../i));
     const response = screen.getByText(/Clean room/i);
     expect(response).toBeInTheDocument();
+    expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
   });
 });

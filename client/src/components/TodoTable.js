@@ -43,7 +43,7 @@ const TodoTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
-  const { todos } = useSelector((state) => state.todo);
+  const { todos, loading } = useSelector((state) => state.todo);
   const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
@@ -86,9 +86,8 @@ const TodoTable = () => {
 
   return (
     <>
-      {todos.length === 0 ? (
-        <p>Loading...</p>
-      ) : (
+      {loading && <p>Loading...</p>}
+      {todos.length > 0 && (
         <Paper elevation={3} sx={{ m: 5 }}>
           <TableContainer sx={{ maxHeight: 500 }}>
             <Table stickyHeader aria-label="sticky table">
