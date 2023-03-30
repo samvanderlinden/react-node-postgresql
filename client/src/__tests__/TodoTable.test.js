@@ -28,7 +28,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe("TodoTable component", () => {
-  test("should render todo element in table", async () => {
+  test("should render todo elements in table on component mount", async () => {
     renderWithProviders(<TodoTable />);
 
     expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
